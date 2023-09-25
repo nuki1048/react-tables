@@ -30,9 +30,9 @@ const AppNavbar = (): JSX.Element => {
           <Nav.Link href='#' onClick={() => setShowForm(true)}>
             Add new table
           </Nav.Link>
-          <Nav.Link href='#link'>Link</Nav.Link>
+          <Nav.Link href='#'>Link</Nav.Link>
           <NavDropdown
-            title='Dropdown'
+            title='Select Table'
             id='basic-nav-dropdown'
             onSelect={handleSelect}
           >
