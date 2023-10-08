@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.firstRow {
+  width: 40%;
+  text-align: left;
+}
+.dateRow {
+  margin: 0 auto 0 300px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #000;
+}
+.link:hover {
+  text-decoration: underline;
+}

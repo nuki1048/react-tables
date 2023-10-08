@@ -15,10 +15,17 @@ export interface TableKeys {
 export interface ExternalTable {
   data: TableData;
   keys: TableKeys;
+  id: string;
 }
 
 export enum ApplicationStatus {
   Idle,
   Loading,
   Error,
+}
+
+export interface FileWithSize {
+  file: string;
+  size: number;
+  createdAt: Date;
 }

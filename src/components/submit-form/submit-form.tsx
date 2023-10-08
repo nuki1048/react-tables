@@ -1,7 +1,7 @@
 import { FormEvent, useRef, useState } from 'react';
 import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
-import CustomToast from '../custom-toast/custom-toast';
 import { SubmitFormProps } from './submit-form.props';
+import CustomToast from '@/components/custom-toast';
 
 const SubmitForm = ({ setShowForm, showForm }: SubmitFormProps) => {
   const inputRef = useRef(null);

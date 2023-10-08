@@ -1,4 +1,4 @@
-import { ApplicationStatus, ExternalTable } from '../../interfaces/interfaces';
+import { ApplicationStatus, ExternalTable } from '../../global/interfaces';
 
 export interface TableProps {
   table: ExternalTable;

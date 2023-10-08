@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import { ApplicationStatus, TableRow } from '../../interfaces/interfaces';
-import Spinner from '../spinner/spinner';
+import { ApplicationStatus, TableRow } from '../../global/interfaces';
 import { TableProps } from './table.props';
-import { Table as TableBootstrap } from 'react-bootstrap/';
-import Tabs from '../tabs/tabs';
+import { Table as TableBootstrap } from 'react-bootstrap';
+import Spinner from '@/components/spinner';
+import Tabs from '@/components/tabs';
 
 const Table = ({ table, status }: TableProps) => {
   const [tablePages, setTablePages] = useState<string[]>([]);
