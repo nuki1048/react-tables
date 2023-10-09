@@ -46,9 +46,9 @@ function HomePage() {
               const name = table.file.split('.');
 
               return (
-                <ListGroup.Item key={table.file} style={{ padding: '0 20px' }}>
+                <ListGroup.Item key={table.file} className={styles.item}>
                   <Link to={`/editor/${name[0]}`} className={styles.link}>
-                    <h3 className={styles.firstRow}>{table.file}</h3>
+                    <h5 className={styles.firstRow}>{table.file}</h5>
                     <span className={styles.dateRow}>
                       {getHumanReadableDate(table.createdAt)}
                     </span>

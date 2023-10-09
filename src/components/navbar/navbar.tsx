@@ -8,16 +8,23 @@ const AppNavbar = (): JSX.Element => {
   return (
     <Navbar
       expand='lg'
-      className='bg-body-tertiary p-3 position-fixed top-0 w-100'
+      className='background-red p-3 position-fixed top-0 w-100'
     >
-      <Navbar.Brand href='/'>Simple Table Parser📚📅</Navbar.Brand>
-      <Navbar.Toggle aria-controls='basic-navbar-nav' />
+      <Navbar.Brand href='/' className='color-white-logo'>
+        Simple Table Parser📚📅
+      </Navbar.Brand>
       <Navbar.Collapse id='basic-navbar-nav'>
         <Nav className='me-auto'>
-          <Nav.Link href='#' onClick={() => setShowForm(true)}>
+          <Nav.Link
+            href='#'
+            onClick={() => setShowForm(true)}
+            className='color-white'
+          >
             Add new table
           </Nav.Link>
-          <Nav.Link href='#'>Link</Nav.Link>
+          <Nav.Link href='#' className='color-white'>
+            Link
+          </Nav.Link>
         </Nav>
       </Navbar.Collapse>
       <SubmitForm showForm={showForm} setShowForm={setShowForm} />

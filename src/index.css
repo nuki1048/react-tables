@@ -31,3 +31,26 @@ body {
 .main {
   padding-top: 75px;
 }
+
+.background-red {
+  background: #8c1c1c;
+}
+.color-white {
+  color: #fff;
+  border-bottom: 1px solid transparent;
+}
+.color-white:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.color-white-logo {
+  color: #fff;
+}
+
+.color-white-logo:hover {
+  color: #fff;
+}
+* {
+  transition: 0.5s all;
+}
