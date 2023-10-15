@@ -1,4 +1,5 @@
+import { UseDisclosureReturn } from '@nextui-org/use-disclosure';
+
 export interface SubmitFormProps {
-  showForm: boolean;
-  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+  disclosure: UseDisclosureReturn;
 }

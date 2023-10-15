@@ -1,16 +1,29 @@
-import { FormEvent, useRef, useState } from 'react';
-import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
+import { FormEvent, useState } from 'react';
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@nextui-org/react';
+
 import { SubmitFormProps } from './submit-form.props';
 import CustomToast from '@/components/custom-toast';
+import DragDropInput from '@/components/drag-drop-input';
 
-const SubmitForm = ({ setShowForm, showForm }: SubmitFormProps) => {
-  const inputRef = useRef(null);
+const SubmitForm = ({ disclosure }: SubmitFormProps) => {
+  const { isOpen, onClose, onOpenChange } = disclosure;
+
+  const [file, setFile] = useState<File | undefined>();
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    const inputValue = inputRef.current as HTMLInputElement | null;
-    if (!inputValue?.files) return;
-    const file = inputValue?.files[0];
+    if (!file) {
+      setToastText('You need to upload file first!');
+      setShowToast(true);
+      return;
+    }
 
     const imageData = new FormData();
     imageData.append('xlsx_file', file);
@@ -19,41 +32,54 @@ const SubmitForm = ({ setShowForm, showForm }: SubmitFormProps) => {
         method: 'POST',
         body: imageData,
       });
-      setShowForm(false);
       setToastText('Your xlsx file successfully uploaded!');
       setShowToast(true);
+      onClose();
     } catch (error) {
-      setShowForm(false);
+      false;
       setToastText('Something Went Wrong!');
       setShowToast(true);
     }
   };
 
-  const [showToast, setShowToast] = useState(false);
-  const [toastText, setToastText] = useState('');
-
-  const handleClose = () => setShowForm(false);
+  const [showToast, setShowToast] = useState<boolean>(true);
+  const [toastText, setToastText] = useState<string>('');
 
   return (
     <>
-      <Modal show={showForm} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Upload New Table</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <InputGroup className='mb-3'>
-              <Form.Control type='file' accept='.xlsx, .xls' ref={inputRef} />
-            </InputGroup>
-
-            <Button variant='primary' type='submit' size='lg'>
-              Submit
-            </Button>
-          </Form>
-        </Modal.Body>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="top-center"
+        backdrop="blur"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Submit New File
+              </ModalHeader>
+              <ModalBody>
+                <form id="file-form" onSubmit={handleSubmit}>
+                  <DragDropInput setFile={setFile} file={file} />
+                </form>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Close
+                </Button>
+                <input
+                  type="submit"
+                  form="file-form"
+                  value="Upload File"
+                  className="flex cursor-pointer items-center justify-center rounded-medium bg-primary px-unit-4 text-white"
+                />
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+        <CustomToast show={showToast} setShow={setShowToast} text={toastText} />
       </Modal>
-
-      <CustomToast show={showToast} setShow={setShowToast} text={toastText} />
     </>
   );
 };

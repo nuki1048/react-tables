@@ -1,25 +1,21 @@
-import { Nav } from 'react-bootstrap';
 import { TabsProps } from './tabs.props';
+import { Tab, Tabs as TabsUI } from '@nextui-org/react';
 
-const Tabs = ({
-  activePage,
-  tablePages,
-  onChangeActivePage,
-}: TabsProps): JSX.Element => {
+const Tabs = ({ tablePages, onChangeActivePage }: TabsProps): JSX.Element => {
   return (
-    <Nav
-      variant='underline'
-      defaultActiveKey={activePage}
-      className='position-sticky bottom-0 bg-body-tertiary p-2'
-    >
-      {tablePages.map((item) => (
-        <Nav.Item onClick={() => onChangeActivePage(item)}>
-          <Nav.Link eventKey={item} active={activePage === item}>
-            {item}
-          </Nav.Link>
-        </Nav.Item>
-      ))}
-    </Nav>
+    <div className="flex flex-wrap gap-4">
+      {tablePages && (
+        <TabsUI
+          variant="underlined"
+          aria-label="Tabs variants"
+          items={tablePages}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onSelectionChange={onChangeActivePage as any}
+        >
+          {(item) => <Tab key={item.key} title={item.title} />}
+        </TabsUI>
+      )}
+    </div>
   );
 };
 export default Tabs;

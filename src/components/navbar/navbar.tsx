@@ -1,35 +1,99 @@
 import { useState } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
-import SubmitForm from '@/components/submit-form';
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  Button,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  useDisclosure,
+} from '@nextui-org/react';
+import SubmitForm from '../submit-form';
 
-const AppNavbar = (): JSX.Element => {
-  const [showForm, setShowForm] = useState(false);
+export default function AppNavbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  const modal = useDisclosure();
+  const { onOpen } = modal;
+
+  const menuItems = [
+    'Profile',
+    'Dashboard',
+    'Activity',
+    'Analytics',
+    'System',
+    'Deployments',
+    'My Settings',
+    'Team Settings',
+    'Help & Feedback',
+    'Log Out',
+  ];
 
   return (
-    <Navbar
-      expand='lg'
-      className='background-red p-3 position-fixed top-0 w-100'
-    >
-      <Navbar.Brand href='/' className='color-white-logo'>
-        Simple Table Parser📚📅
-      </Navbar.Brand>
-      <Navbar.Collapse id='basic-navbar-nav'>
-        <Nav className='me-auto'>
-          <Nav.Link
-            href='#'
-            onClick={() => setShowForm(true)}
-            className='color-white'
-          >
-            Add new table
-          </Nav.Link>
-          <Nav.Link href='#' className='color-white'>
-            Link
-          </Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-      <SubmitForm showForm={showForm} setShowForm={setShowForm} />
+    <Navbar onMenuOpenChange={setIsMenuOpen} position='static'>
+      <NavbarContent>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          className='sm:hidden'
+        />
+        <NavbarBrand>
+          <Link href='/' className='dark:text-white light:text-foreground'>
+            <p className='font-bold text-inherit'>ACME</p>
+          </Link>
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent className='hidden sm:flex gap-4' justify='center'>
+        <NavbarItem>
+          <Link color='foreground' href='#'>
+            Features
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive>
+          <Link href='#' aria-current='page'>
+            Customers
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color='foreground' onClick={onOpen}>
+            Upload New Table
+          </Link>
+        </NavbarItem>
+      </NavbarContent>
+      <NavbarContent justify='end'>
+        <NavbarItem className='hidden lg:flex'>
+          <Link href='#'>Login</Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Button as={Link} color='primary' href='#' variant='flat'>
+            Sign Up
+          </Button>
+        </NavbarItem>
+      </NavbarContent>
+      <NavbarMenu>
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem key={`${item}-${index}`}>
+            <Link
+              color={
+                index === 2
+                  ? 'primary'
+                  : index === menuItems.length - 1
+                  ? 'danger'
+                  : 'foreground'
+              }
+              className='w-full'
+              href='#'
+              size='lg'
+            >
+              {item}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
+      <SubmitForm disclosure={modal} />
     </Navbar>
   );
-};
-
-export default AppNavbar;
+}

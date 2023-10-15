@@ -1,18 +1,31 @@
 import { useState, useEffect } from 'react';
 import { ApplicationStatus, FileWithSize } from '@/global/interfaces';
-import { ListGroup } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import styles from './home.module.css';
-import Spinner from '@/components/spinner';
+import { Skeleton } from '@nextui-org/react';
+import FileItem from '@/components/file-item/file-item';
+
+const skeletonStyles = 'flex w-full h-16 rounded-lg';
+
+const SkeletonHomePage = () => (
+  <ul className="flex w-full flex-col gap-3">
+    <Skeleton className={skeletonStyles} />
+    <Skeleton className={skeletonStyles} />
+    <Skeleton className={skeletonStyles} />
+    <Skeleton className={skeletonStyles} />
+    <Skeleton className={skeletonStyles} />
+  </ul>
+);
+
 function HomePage() {
   const [status, setStatus] = useState<ApplicationStatus>(
-    ApplicationStatus.Idle
+    ApplicationStatus.Idle,
   );
   const [availableFiles, setAvailableFiles] = useState<FileWithSize[]>([]);
 
   useEffect(() => {
     setStatus(ApplicationStatus.Loading);
-    fetch('https://multipage-table-parser-api.vercel.app/api/getListFiles')
+    fetch(
+      'https://multipage-table-parser-oafp5shmi-nuki1048.vercel.app/api/files',
+    )
       .then((res) => res.json())
       .then((res) => {
         setStatus(ApplicationStatus.Idle);
@@ -22,43 +35,30 @@ function HomePage() {
       .catch((_err) => setStatus(ApplicationStatus.Error));
   }, []);
 
-  const getHumanReadableDate = (date: Date): string => {
-    return new Date(date).toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    });
-  };
-
   return (
-    <main className='main'>
-      {status === ApplicationStatus.Loading && <Spinner />}
+    <main className="w-full">
+      <div className="flex items-center justify-between px-14">
+        <span className="w-[40%] text-left">Name</span>
+        <span className="ml-80 mr-auto">Date</span>
+        <span>Size</span>
+      </div>
+      {status === ApplicationStatus.Loading && <SkeletonHomePage />}
       {status === ApplicationStatus.Error && <div>Error...</div>}
       {status === ApplicationStatus.Idle && (
         <>
-          <div className={styles.wrapper}>
-            <span className={styles.firstRow}>Name</span>
-            <span className={styles.dateRow}>Date</span>
-            <span>Size</span>
-          </div>
-          <ListGroup>
-            {availableFiles.map((table) => {
-              const name = table.file.split('.');
+          <ul className="mt-3 flex flex-col gap-3 overflow-auto">
+            {availableFiles.map((file) => {
+              const name = file.file.split('.');
 
               return (
-                <ListGroup.Item key={table.file} className={styles.item}>
-                  <Link to={`/editor/${name[0]}`} className={styles.link}>
-                    <h5 className={styles.firstRow}>{table.file}</h5>
-                    <span className={styles.dateRow}>
-                      {getHumanReadableDate(table.createdAt)}
-                    </span>
-
-                    <span>{table.size.toFixed(3)}MB</span>
-                  </Link>
-                </ListGroup.Item>
+                <FileItem
+                  file={file}
+                  link={`/editor/${name[0]}`}
+                  key={`file-id-${file}`}
+                />
               );
             })}
-          </ListGroup>
+          </ul>
         </>
       )}
     </main>

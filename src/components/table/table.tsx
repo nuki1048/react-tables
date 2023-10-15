@@ -1,20 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import { ApplicationStatus, TableRow } from '../../global/interfaces';
+import { TableRow } from '../../global/interfaces';
 import { TableProps } from './table.props';
-import { Table as TableBootstrap } from 'react-bootstrap';
-import Spinner from '@/components/spinner';
 import Tabs from '@/components/tabs';
+import {
+  Table as TableUI,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableBody,
+  TableRow as TableRowUI,
+  getKeyValue,
+} from '@nextui-org/react';
 
-const Table = ({ table, status }: TableProps) => {
-  const [tablePages, setTablePages] = useState<string[]>([]);
+const Table = ({ table }: TableProps) => {
+  const [tablePages, setTablePages] = useState<
+    { key: string; title: string }[]
+  >([]);
   const [activePage, setActivePage] = useState<string>('');
   const [activePageKeys, setActivePageKeys] = useState<string[]>([]);
   const [activePageData, setActivePageData] = useState<TableRow | null>(null);
   useEffect(() => {
     if (table) {
       const tableKeys = Object.keys(table.data);
-      setTablePages(tableKeys);
+      const obj = tableKeys.map((item) => ({ key: item, title: item }));
+      setTablePages(obj);
       onChangeActivePage(tableKeys[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -27,45 +37,44 @@ const Table = ({ table, status }: TableProps) => {
   };
 
   return (
-    <>
-      <TableBootstrap striped bordered style={{ minHeight: 500 }}>
-        {status === ApplicationStatus.Loading && <Spinner />}
-        {status === ApplicationStatus.Error && <div>Error...</div>}
-        {status === ApplicationStatus.Idle && (
-          <>
-            <thead>
-              {table && activePageKeys && (
-                <tr>
-                  {activePageKeys.map((item) => {
-                    return <th key={item}>{item}</th>;
-                  })}
-                </tr>
-              )}
-            </thead>
-            <tbody>
-              {table &&
-                activePageData &&
-                activePageData.map(
-                  (page: { [key: string]: any }, index: number) => (
-                    <tr key={`page-${index}`}>
-                      {Object.keys(page).map((item) => (
-                        <td className='table-td' key={`${item}-${page[item]}`}>
-                          {page[item]}
-                        </td>
-                      ))}
-                    </tr>
-                  )
-                )}
-            </tbody>
-          </>
-        )}
-      </TableBootstrap>
+    <div className="flex w-full flex-col">
+      {table && activePageData && (
+        <TableUI
+          removeWrapper
+          fullWidth
+          selectionMode="single"
+          defaultSelectedKeys={['2']}
+          aria-label="Example static collection table"
+        >
+          <TableHeader>
+            {activePageKeys.map((name) => (
+              <TableColumn key={name}>{name}</TableColumn>
+            ))}
+          </TableHeader>
+          <TableBody
+            emptyContent={'No rows to display.'}
+            items={activePageData}
+          >
+            {table && activePageData
+              ? activePageData.map((row, index) => {
+                  return (
+                    <TableRowUI key={`${index + 1}`}>
+                      {(columnKey) => (
+                        <TableCell>{getKeyValue(row, columnKey)}</TableCell>
+                      )}
+                    </TableRowUI>
+                  );
+                })
+              : []}
+          </TableBody>
+        </TableUI>
+      )}
       <Tabs
         activePage={activePage}
-        onChangeActivePage={onChangeActivePage}
         tablePages={tablePages}
+        onChangeActivePage={onChangeActivePage}
       />
-    </>
+    </div>
   );
 };
 
